@@ -1,3 +1,13 @@
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'java'
+}
+
+lombok {
+    version = '1.18.2'
+    sha256 = ""
+}
+
 if (project.hasProperty("topobyte")) {
     apply from: 'file:///' + System.getProperty("user.home") \
         + '/.gradle/topobyte.gradle'
@@ -5,6 +15,7 @@ if (project.hasProperty("topobyte")) {
 
 dependencies {
     compile 'de.topobyte:system-utils:0.0.1'
+    compile 'de.topobyte:gson-utils:0.0.1'
     compile 'commons-io:commons-io:2.4'
     compile 'org.jsoup:jsoup:1.8.3'
 }

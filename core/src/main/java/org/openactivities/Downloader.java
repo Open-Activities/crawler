@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,12 @@ public class Downloader
 
 	public void crawl() throws MalformedURLException, IOException
 	{
+		crawl(null);
+	}
+
+	public void crawl(Consumer<Path> processor)
+			throws MalformedURLException, IOException
+	{
 		FileCache fileCache = new FileCache();
 
 		URL url = new URL(start);
@@ -47,6 +54,11 @@ public class Downloader
 			if (matcher.matches()) {
 				URL linkUrl = new URL(url, href);
 				fileCache.download(linkUrl.toString());
+				Path f = fileCache.file(linkUrl.toString());
+
+				if (processor != null) {
+					processor.accept(f);
+				}
 			}
 		}
 	}
