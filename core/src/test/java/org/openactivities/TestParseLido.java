@@ -14,7 +14,8 @@ public class TestParseLido
 	{
 		String start = "https://www.lido-berlin.de";
 		String linksPattern = "/events/.*";
-		Downloader downloader = new Downloader(start, linksPattern);
+		FileCache fileCache = new FileCache();
+		Downloader downloader = new Downloader(fileCache, start, linksPattern);
 		downloader.crawl(file -> {
 			try {
 				List<Event> events = EventParsing.parse(file);

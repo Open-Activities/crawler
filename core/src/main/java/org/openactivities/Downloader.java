@@ -19,11 +19,13 @@ import org.jsoup.select.Elements;
 public class Downloader
 {
 
+	private FileCache fileCache;
 	private String start = "https://www.lido-berlin.de";
 	private Pattern patternLinks = Pattern.compile("/events/.*");
 
-	public Downloader(String start, String linksPattern)
+	public Downloader(FileCache fileCache, String start, String linksPattern)
 	{
+		this.fileCache = fileCache;
 		this.start = start;
 		this.patternLinks = Pattern.compile(linksPattern);
 	}
@@ -36,8 +38,6 @@ public class Downloader
 	public void crawl(Consumer<Path> processor)
 			throws MalformedURLException, IOException
 	{
-		FileCache fileCache = new FileCache();
-
 		URL url = new URL(start);
 		fileCache.download(start);
 
