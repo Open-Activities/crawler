@@ -156,9 +156,15 @@ public class EventParsing
 		if (jImage != null) {
 			JsonArray jImages = jImage.getAsJsonArray();
 			for (int i = 0; i < jImages.size(); i++) {
-				JsonObject joImage = jImages.get(i).getAsJsonObject();
-				String url = joImage.get("url").getAsString();
-				images.add(new Image(url));
+				JsonElement jeImage = jImages.get(i);
+				if (jeImage.isJsonPrimitive()) {
+					String url = jeImage.getAsString();
+					images.add(new Image(url));
+				} else if (jeImage.isJsonObject()) {
+					JsonObject joImage = jImages.get(i).getAsJsonObject();
+					String url = joImage.get("url").getAsString();
+					images.add(new Image(url));
+				}
 			}
 		}
 		return images;
@@ -173,7 +179,17 @@ public class EventParsing
 		}
 
 		String locationName = joLocation.get("name").getAsString();
-		String address = joLocation.get("address").getAsString();
+		JsonElement jeAddress = joLocation.get("address");
+		String address = null;
+		if (jeAddress.isJsonPrimitive()) {
+			address = jeAddress.getAsString();
+		} else if (jeAddress.isJsonObject()) {
+			JsonObject joAddress = (JsonObject) jeAddress;
+			JsonElement streetAddress = joAddress.get("streetAddress");
+			if (streetAddress.isJsonPrimitive()) {
+				address = streetAddress.getAsString();
+			}
+		}
 		return new Location(locationName, address);
 	}
 

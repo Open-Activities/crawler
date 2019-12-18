@@ -20,8 +20,8 @@ public class Downloader
 {
 
 	private FileCache fileCache;
-	private String start = "https://www.lido-berlin.de";
-	private Pattern patternLinks = Pattern.compile("/events/.*");
+	private String start;
+	private Pattern patternLinks;
 
 	public Downloader(FileCache fileCache, String start, String linksPattern)
 	{
