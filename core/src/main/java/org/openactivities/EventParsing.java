@@ -186,8 +186,16 @@ public class EventParsing
 		} else if (jeAddress.isJsonObject()) {
 			JsonObject joAddress = (JsonObject) jeAddress;
 			JsonElement streetAddress = joAddress.get("streetAddress");
+			JsonElement postalCode = joAddress.get("postalCode");
+			JsonElement addressLocality = joAddress.get("addressLocality");
 			if (streetAddress.isJsonPrimitive()) {
 				address = streetAddress.getAsString();
+				if (postalCode.isJsonPrimitive()) {
+					address += ", " + postalCode.getAsString();
+					if (addressLocality.isJsonPrimitive()) {
+						address += " " + addressLocality.getAsString();
+					}
+				}
 			}
 		}
 		return new Location(locationName, address);

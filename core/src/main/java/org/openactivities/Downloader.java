@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,6 +47,8 @@ public class Downloader
 		BufferedReader reader = Files.newBufferedReader(file);
 		String text = IOUtils.toString(reader);
 
+		Set<Path> done = new HashSet<>();
+
 		Document document = Jsoup.parse(text);
 		Elements links = document.getElementsByTag("a");
 		for (int i = 0; i < links.size(); i++) {
@@ -55,6 +59,12 @@ public class Downloader
 				URL linkUrl = new URL(url, href);
 				fileCache.download(linkUrl.toString());
 				Path f = fileCache.file(linkUrl.toString());
+
+				if (done.contains(f)) {
+					continue;
+				}
+
+				done.add(f);
 
 				if (processor != null) {
 					processor.accept(f);
